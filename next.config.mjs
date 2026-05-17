@@ -6,6 +6,10 @@ const nextConfig = {
     turbo: {
       enabled: false
     }
+},
+devIndicators: {
+  appIsrStatus: false,
+  buildActivity: false,
 }
 }
 

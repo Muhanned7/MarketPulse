@@ -36,9 +36,35 @@ export async function POST(request) {
     }
     return Math.abs(h).toString(16)
   }
-  if (cache.has(query)) {
+  
+  const watchlist = await pool.query("SELECT * FROM watchlist")
+  const ticker_list = watchlist.rows.map(row => row.ticker) 
+
+  const allQueries = [query, ...ticker_list]
+
+  const cacheKey = [query, ...ticker_list].sort().join(',')
+  if (cache.has(cacheKey)) {
     return Response.json({articles: cache.get(query), cached:true})
   }
+  
+  const allNewsResponses = await Promise.all(
+    allQueries.map(q =>
+      fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&pageSize=6&sortBy=publishedAt&apiKey=${process.env.NEWSAPI_KEY}`)
+        .then(res => res.json())
+    )
+  )
+
+  // 3. Flatten and deduplicate articles by URL
+  const seen = new Set()
+  const mergedArticles = allNewsResponses
+  .flatMap(data => data.articles || [])
+  .filter(article => {
+    if (seen.has(article.url)) return false
+    seen.add(article.url)
+    return true
+  })
+
+
   /*
   const response = await client.messages.create({
     model : "claude-sonnet-4-20250514",
@@ -49,11 +75,14 @@ Start your response with [ and end with ]. Nothing else.`,
     
     messages: [{ role: 'user', content: `Search for latest financial news: ${query}` }]
   })
-  */
+  
   const newsResponse = await fetch(
     `https://newsapi.org/v2/everything?q=${query}&pageSize=6&sortBy=publishedAt&apiKey=${process.env.NEWSAPI_KEY}`
   )
-  const newsData = await newsResponse.json()
+    */
+  
+  
+  //const newsData = await newsResponse.json()
   /*
   if (response) {
     //console.log("response: ", response)
@@ -83,9 +112,9 @@ Start your response with [ and end with ]. Nothing else.`,
       const score = json_text_2.find(s => s.headline == article.headline)
       return {...article, ...score}
     })
-      */
-    if(newsData){
-    const json_text = newsData.articles.map(article => ({
+    */
+    if(mergedArticles){
+    const json_text = mergedArticles.map(article => ({
       headline: article.title,
       summary: article.description,
       source: article.source.name,
@@ -99,7 +128,7 @@ Start your response with [ and end with ]. Nothing else.`,
     const scoredArticles = articles.map(article => ({
       ...article, ...mockScore(article)
     }))
-    console.log("scored articles", scoredArticles)
+    //console.log("scored articles", scoredArticles)
     if (save){
     for (const article of scoredArticles) {
       try {
@@ -121,7 +150,7 @@ Start your response with [ and end with ]. Nothing else.`,
             article.confidence,
             article.rationale,
             article.sectors,
-            query
+            allQueries
           ]
         )
 
@@ -129,8 +158,8 @@ Start your response with [ and end with ]. Nothing else.`,
       const embedding = await getEmbedding(article.headline + ' ' + article.summary)
         
       
-      console.log('embedding length:', embedding.length)
-      console.log('article id:', article.id)
+      //console.log('embedding length:', embedding.length)
+      //console.log('article id:', article.id)
       // 3. save to Pinecone
     
       await index.upsert({
@@ -150,12 +179,12 @@ Start your response with [ and end with ]. Nothing else.`,
   } catch(err){
     console.error('Storage error for article: ', article.id, err.message)
   }
-}
+  }
 }
   // save search to PostgreSQL
 await pool.query(
   'INSERT INTO searches (query, results_count) VALUES ($1, $2)',
-  [query, scoredArticles.length]
+  [allQueries, scoredArticles.length]
 )
 
 

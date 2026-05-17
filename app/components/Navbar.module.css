@@ -1,0 +1,146 @@
+.nav {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    cursor: pointer;
+    display: flex;
+    align-items: baseline;
+    gap: 1px;
+}
+
+.logoText {
+    font-size: 22px;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.5px;
+}
+
+.logoAccent {
+    font-size: 22px;
+    font-weight: 800;
+    color: #00d4aa;
+    letter-spacing: -0.5px;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btnPrimary {
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background-color: #00d4aa;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btnSecondary {
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background-color: transparent;
+    color: #6b7280;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #00d4aa;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdownWrapper {
+    position: relative;
+}
+
+.dropdown {
+    position: absolute;
+    right: 0;
+    top: 44px;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    min-width: 180px;
+    overflow: hidden;
+    z-index: 200;
+}
+
+.dropdownHeader {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.dropdownLabel {
+    font-size: 12px;
+    color: #9ca3af;
+    margin: 0;
+}
+
+.dropdownEmail {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+    margin: 2px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dropdownItem {
+    width: 100%;
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 13px;
+    color: #374151;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    display: block;
+}
+
+.dropdownItem:hover {
+    background-color: #f9fafb;
+}
+
+.dropdownItemDanger {
+    width: 100%;
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 13px;
+    color: #ef4444;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    display: block;
+    border-top: 1px solid #f3f4f6;
+}
+
+.dropdownItemDanger:hover {
+    background-color: #fef2f2;
+}
