@@ -12,9 +12,8 @@ function page(){
     const [groups, setGroups] = useState({})
     const [similarArticles, setSimilarArticles] = useState([])
     const [watchlist, setWatchlist] = useState([])        // saved tickers
-    const [tickerInput, setTickerInput] = useState('')    // input field
+    //const [tickerInput, setTickerInput] = useState('')    // input field
     const [watchlistOpen, setWatchlistOpen] = useState(false) // collapsed/expanded
-    const { user, loading, logout} = useAuth()
     const router = useRouter()
     const [tiles, setTiles] = useState([])
     const [tilesLoading, setTilesLoading] = useState(true)
@@ -36,15 +35,19 @@ function page(){
     };
         
     async function loadWatchlist() { 
-       const response = await fetch('/api/watchlist')
+        const token = localStorage.getItem('token')
+       const response = await fetch('/api/watchlist', {
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
        const data = await response.json()
-       setWatchlist(data.tickers.map(t => t.ticker))
+       setWatchlist(data.tickers.map(t => t.ticker) || [])
 
      }
 
 
      async function addTicker(ticker) { 
         if (!ticker) return
+        const token = localStorage.getItem('token')
         const checkResponse = await fetch('/api/tickers')
         const checkData = await checkResponse.json()
         
@@ -67,21 +70,24 @@ function page(){
          // 3. add to watchlist
         await fetch('/api/watchlist', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` },
             body: JSON.stringify({ symbol: ticker })
         })
         //isWatched.append(ticker)
         setWatchlist([...watchlist, ticker])
-        setTickerInput('')
         loadWatchlist()
+        loadTiles()
       }
 
 
     // remove ticker
     async function removeTicker(symbol) { 
+        const token = localStorage.getItem('token')
         const resp = await fetch('/api/watchlist', {
             method: 'DELETE',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`},
             body: JSON.stringify( {symbol })
         })
         loadWatchlist()
@@ -143,7 +149,10 @@ function page(){
         setTilesLoading(true)
         try {
             // fetch watchlist
-            const res = await fetch('/api/watchlist')
+            const token = localStorage.getItem('token')
+            const res = await fetch('/api/watchlist', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
             const data = await res.json()
             const tickers = data.tickers.map(t => t.ticker)
 
@@ -174,7 +183,7 @@ function page(){
     }, [])
     const allTickers = [...new Set([...POPULAR_TICKERS, ...watchlist])];
     
-    if (loading || !user) return null
+
     return(
         
         <main className="min-h-screen p-6" style={{backgroundColor: '#f0f1f2', color: 'grey'}}>
@@ -233,8 +242,8 @@ function page(){
             {tiles.map(tile => (
                 <div
                     key={tile.ticker}
-                    className="min-w-[25%] max-w-[25%] md:min-w-[25%] lg:min-w-[25%] snap-center bg-white rounded-xl p-5 border border-gray-200 cursor-pointer hover:border-teal-400 transition-all flex-shrink-0"
-                    onClick={() => router.push(`/analysis/${tile.ticker}`)}
+                    className="min-w-[25%] max-w-[25%] md:min-w-[25%] lg:min-w-[25%] snap-center bg-white rounded-xl p-5 border border-gray-200 hover:border-teal-400 transition-all flex-shrink-0"
+                    
                 >
                     {tile.status === 'error' ? (
                         <div>
@@ -265,8 +274,8 @@ function page(){
                             <p className="text-sm text-gray-500 line-clamp-3">{tile.summary}</p>
 
                             <button
-                                className="mt-4 w-full py-2 rounded-lg text-sm font-medium text-black"
-                                style={{ backgroundColor: '#00d4aa' }}
+                                className="mt-4 w-full py-2 rounded-lg text-sm font-medium text-black cursor-pointer"
+                                style={{ backgroundColor: '#00d4aa' }} onClick={() => router.push(`/analysis/${tile.ticker}`)}
                             >
                                 View Full Report →
                             </button>
@@ -294,7 +303,6 @@ function page(){
         placeholder="Search — e.g. NVIDIA earnings, Fed rates, oil prices..."
         onChange={(e) => {
             setInput(e.target.value)
-            setTickerInput(e.target.value)
         }} 
         className="flex-1 bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 text-black placeholder-gray-400 outline-none focus:border-teal-400"
         />
@@ -334,13 +342,13 @@ function page(){
                         </a>
 
                         <div className="flex items-center gap-2 mt-2">
-                        <span className="text-xs px-2 py-1 rounded font-medium" style={{backgroundColor: '#00d4aa22', color: '#00d4aa'}}>
+                        <span className="text-sm px-2 py-1 rounded font-medium" style={{backgroundColor: '#00d4aa22', color: '#00d4aa'}}>
               score {article.score}/10
             </span>
-            <span className="text-xs px-2 py-1 rounded font-medium" style={{backgroundColor: '#ffffff21', color: '#00d4aa'}}>
+            <span className="text-sm px-2 py-1 rounded font-medium" style={{backgroundColor: '#ffffff21', color: '#00d4aa'}}>
                 Rationale:{article.rationale}
             </span>
-            <span className="text-xs px-2 py-1 rounded font-medium" style={{
+            <span className="text-sm px-2 py-1 rounded font-medium" style={{
               backgroundColor: article.sentiment === 'bullish' ? '#22c55e22' : article.sentiment === 'bearish' ? '#ef444422' : '#6b728022',
               color: article.sentiment === 'bullish' ? '#22c55e' : article.sentiment === 'bearish' ? '#ef4444' : '#6b7280'
             }}> {article.sentiment}</span>
@@ -348,7 +356,7 @@ function page(){
             href={article.url} 
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-gray-400 hover:text-teal-400 ml-auto"
+            className="text-sm text-gray-400 hover:text-teal-400 ml-auto"
         >
             ↗ {article.source}
         </a>
@@ -372,7 +380,7 @@ function page(){
                         href={item.metadata.url} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-xs text-gray-400 hover:text-teal-400 ml-auto"
+                        className="text-sm text-gray-400 hover:text-teal-400 ml-auto"
                         >
                         ↗ {item.metadata.source}
                         </a>

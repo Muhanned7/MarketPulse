@@ -2,6 +2,7 @@
 import Providers from './Providers'
 import "./globals.css";
 import Navbar from './components/Navbar'
+import Sidebar from './components/Sidebar'
 
 
 export default function RootLayout({ children }) {
@@ -10,7 +11,12 @@ export default function RootLayout({ children }) {
           <body>
                 <Providers>
                 <Navbar />
-                    {children}
+                    <div style={{ display: 'flex', flex: 1 }}>
+                    <Sidebar />
+                    <div style={{ flex: 1, overflow: 'auto' }}>
+                            {children}
+                        </div>
+                    </div>
                 </Providers>
           </body>
       </html>

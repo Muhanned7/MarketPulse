@@ -1,15 +1,20 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
+import { useAuth } from '../context/AuthContext'
+
 
 export default function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
+    const { setUser } = useAuth()
     const router = useRouter()
+ 
 
     async function handleLogin() {
+        
         setLoading(true)
         setError(null)
         try {
@@ -19,15 +24,19 @@ export default function Login() {
                 body: JSON.stringify({ email, password })
             })
             const data = await res.json()
+            console.log("response:", data)  
             if (!res.ok) {
+                console.log("res not ok")
                 setError(data.detail)
                 return
             }
             localStorage.setItem('token', data.token)
             localStorage.setItem('email', data.email)
-            router.push('/')
+            setUser({ token: data.token, email: data.email })
+            router.replace('/')
         } catch (err) {
-            setError('Something went wrong')
+            console.log("error", err)
+            setError('Something went wrong', err)
         } finally {
             setLoading(false)
         }
