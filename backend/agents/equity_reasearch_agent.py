@@ -5,7 +5,7 @@ import random
 from agents.client import client
 
 
-MOCK_MODE = True
+MOCK_MODE = False
 async def equity_research_agent(ticker: str) -> dict:
 
     if MOCK_MODE:

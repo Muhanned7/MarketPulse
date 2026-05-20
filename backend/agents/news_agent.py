@@ -6,7 +6,7 @@ import os
 from agents.client import client
 
 
-MOCK_MODE = True
+MOCK_MODE = False
 async def research_agent(ticker: str) -> dict:
 
     if MOCK_MODE:

@@ -7,7 +7,7 @@ import os
 from agents.client import client
 
 
-MOCK_MODE = True
+MOCK_MODE = False
 async def sentiment_agent(ticker: str, news_data: dict) -> dict:
 
 

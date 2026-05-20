@@ -1,6 +1,5 @@
 import pool from '@/lib/db'
-import { index } from '@/lib/pinecone'
-import { getEmbedding } from '@/lib/embeddings'
+
 import jwt from 'jsonwebtoken'
 
 export async function GET(request){

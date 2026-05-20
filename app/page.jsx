@@ -157,6 +157,7 @@ function page(){
             const tickers = data.tickers.map(t => t.ticker)
 
             // fetch analysis for each ticker in parallel
+            // colab compute https://charcoal-smashing-headstone.ngrok-free.dev
             const results = await Promise.all(
                 tickers.map(ticker =>
                     fetch(`http://localhost:8000/analyse/${ticker}`,

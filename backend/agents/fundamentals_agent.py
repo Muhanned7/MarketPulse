@@ -4,7 +4,7 @@ import yfinance as yf
 import random
 from agents.client import client
 
-MOCK_MODE = True
+MOCK_MODE = False
 async def fundamentals_agent(ticker: str) -> dict:
     if MOCK_MODE:
         await asyncio.sleep(0.5) 

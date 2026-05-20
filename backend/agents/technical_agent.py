@@ -5,7 +5,7 @@ import pandas as pd
 from agents.client import client
 
 
-MOCK_MODE = True
+MOCK_MODE = False
 async def technical_agent(ticker: str) -> dict:
 
 

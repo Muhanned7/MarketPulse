@@ -346,9 +346,10 @@ export default function AnalysisPage() {
     }, [user, loading])
 
     async function fetchAnalysis() {
+        // colab : https://charcoal-smashing-headstone.ngrok-free.dev
         setPageLoading(true)
         try {
-            const res = await fetch(`http://localhost:8000/analyse/${ticker}`, { method: 'POST' })
+            const res = await fetch(`https://localhost:8000/analyse/${ticker}`, { method: 'POST' })
             const data = await res.json()
             setReport(data.report)
             setAgents(data.agents)

@@ -13,7 +13,7 @@ export default function Register() {
         setLoading(true)
         setError(null)
         try {
-            const res = await fetch('http://localhost:8000/auth/register', {
+            const res = await fetch('https://charcoal-smashing-headstone.ngrok-free.dev/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })

@@ -6,7 +6,7 @@ import random
 from agents.client import client
 
 
-MOCK_MODE = True
+MOCK_MODE = False
 async def risk_agent(ticker: str) -> dict:
     if MOCK_MODE:
         await asyncio.sleep(0.5)  # Simulate network latency
