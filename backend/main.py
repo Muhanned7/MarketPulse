@@ -18,10 +18,23 @@ from agents.fundamentals_agent import fundamentals_agent
 from agents.equity_reasearch_agent import equity_research_agent
 from agents.risk_agent import risk_agent
 from agents.client import client
+from prometheus_fastapi_instrumentator import Instrumentator
+from loguru import logger
+from agents.metrics import active_analyses, cache_hits
+from datetime import datetime, timedelta
+import sys
 #client = Mistral(api_key=os.environ["MISTRAL_API_KEY"])
 
 
 app = FastAPI(title="MarketPulse Backend")
+
+# Logging setup
+logger.remove()
+logger.add(sys.stdout, format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}", level="INFO")
+logger.add("logs/app.log", rotation="10 MB", retention="7 days", level="INFO")
+
+# Prometheus metrics
+Instrumentator().instrument(app).expose(app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -81,80 +94,102 @@ async def me(user=Depends(get_current_user)):
 
 
 async def synthesizer(ticker: str, news: dict, sentiment: dict, fundamentals: dict, technical: dict, equity: dict, risk: dict) -> dict:
-    response = await asyncio.to_thread(
-        client.chat.complete,
-        model="mistral-small-latest",
-        messages=[
-            {
-                "role": "system",
-                "content": """You are a senior portfolio manager synthesizing reports from 6 specialist agents.
-                Produce a final investment report. Return JSON with exactly these keys:
+    
+    logger.info(f"Synthesizing requested for {ticker}")
+    
+    try:
+        logger.info(f"Running agents for {ticker}")
+        response = await asyncio.to_thread(
+            client.chat.complete,
+            model="mistral-small-latest",
+            messages=[
                 {
-                    "recommendation": "strong_buy/buy/hold/sell/strong_sell",
-                    "conviction": 1-10,
-                    "price_target": 0.0,
-                    "risk_reward": "favorable/neutral/unfavorable",
-                    "investment_horizon": "short_term/medium_term/long_term",
-                    "bull_case": ["point1", "point2", "point3"],
-                    "bear_case": ["point1", "point2", "point3"],
-                    "key_catalysts": ["catalyst1", "catalyst2"],
-                    "key_risks": ["risk1", "risk2"],
-                    "position_sizing": "large/medium/small/avoid",
-                    "summary": "5 sentence investment summary"
+                    "role": "system",
+                    "content": """You are a senior portfolio manager synthesizing reports from 6 specialist agents.
+                    Produce a final investment report. Return JSON with exactly these keys:
+                    {
+                        "recommendation": "strong_buy/buy/hold/sell/strong_sell",
+                        "conviction": 1-10,
+                        "price_target": 0.0,
+                        "risk_reward": "favorable/neutral/unfavorable",
+                        "investment_horizon": "short_term/medium_term/long_term",
+                        "bull_case": ["point1", "point2", "point3"],
+                        "bear_case": ["point1", "point2", "point3"],
+                        "key_catalysts": ["catalyst1", "catalyst2"],
+                        "key_risks": ["risk1", "risk2"],
+                        "position_sizing": "large/medium/small/avoid",
+                        "summary": "5 sentence investment summary"
+                    }
+                    Return only raw JSON, no markdown."""
+                },
+                {
+                    "role": "user",
+                    "content": f"""Synthesize this analysis for {ticker}:
+                    NEWS: {json.dumps(news)}
+                    SENTIMENT: {json.dumps(sentiment)}
+                    FUNDAMENTALS: {json.dumps(fundamentals)}
+                    TECHNICAL: {json.dumps(technical)}
+                    EQUITY RESEARCH: {json.dumps(equity)}
+                    RISK: {json.dumps(risk)}"""
                 }
-                Return only raw JSON, no markdown."""
-            },
-            {
-                "role": "user",
-                "content": f"""Synthesize this analysis for {ticker}:
-                NEWS: {json.dumps(news)}
-                SENTIMENT: {json.dumps(sentiment)}
-                FUNDAMENTALS: {json.dumps(fundamentals)}
-                TECHNICAL: {json.dumps(technical)}
-                EQUITY RESEARCH: {json.dumps(equity)}
-                RISK: {json.dumps(risk)}"""
-            }
-        ]
-    )
-    raw = response.choices[0].message.content.replace("```json", "").replace("```", "").strip()
-    return json.loads(raw)
+            ]
+        )
+        logger.info(f"Synthesis complete for {ticker}")
+        raw = response.choices[0].message.content.replace("```json", "").replace("```", "").strip()
+        return json.loads(raw)
+    except Exception as e:
+        logger.error(f"Synthesis failed for {ticker}: {e}")
+        raise
+    
 
 analysis_cache = {}
 @app.post("/analyse/{ticker}")
 async def analyse(ticker: str):
-    from datetime import datetime, timedelta
     
+    
+    logger.info(f"Analysis requested for {ticker}")
     # return cache if analysed today
     if ticker in analysis_cache:
         cached_time, cached_data = analysis_cache[ticker]
         if datetime.now() - cached_time < timedelta(hours=24):
+            logger.info(f"Cache hit for {ticker}")
+            cache_hits.labels(ticker=ticker).inc()
             return {**cached_data, "cached": True}
     
-    news = await news_agent(ticker)
-    sentiment, fundamentals, technical, equity, risk = await asyncio.gather(
-        sentiment_agent(ticker, news),
-        fundamentals_agent(ticker),
-        technical_agent(ticker),
-        equity_research_agent(ticker),
-        risk_agent(ticker),
-    )
-    report = await synthesizer(ticker, news, sentiment, fundamentals, technical, equity, risk)
-    
-    result = {
-        "ticker": ticker,
-        "report": report,
-        "agents": {
-            "news": news,
-            "sentiment": sentiment,
-            "fundamentals": fundamentals,
-            "technical": technical,
-            "equity": equity,
-            "risk": risk
+    active_analyses.inc()
+    try:
+        logger.info(f"Running agents for {ticker}")
+        news = await news_agent(ticker)
+        sentiment, fundamentals, technical, equity, risk = await asyncio.gather(
+            sentiment_agent(ticker, news),
+            fundamentals_agent(ticker),
+            technical_agent(ticker),
+            equity_research_agent(ticker),
+            risk_agent(ticker),
+        )
+        report = await synthesizer(ticker, news, sentiment, fundamentals, technical, equity, risk)
+        
+        result = {
+            "ticker": ticker,
+            "report": report,
+            "agents": {
+                "news": news,
+                "sentiment": sentiment,
+                "fundamentals": fundamentals,
+                "technical": technical,
+                "equity": equity,
+                "risk": risk
+            }
         }
-    }
-    
-    analysis_cache[ticker] = (datetime.now(), result)
-    return result
+        
+        analysis_cache[ticker] = (datetime.now(), result)
+        return result
+    except Exception as e:
+        logger.error(f"Analysis failed for {ticker}: {e}")
+        raise
+    finally:
+        active_analyses.dec()
+
 
 
 @app.get("/test/{ticker}")
