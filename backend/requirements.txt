@@ -33,6 +33,7 @@ pandas==2.3.3
 passlib==1.7.4
 peewee==4.0.5
 platformdirs==4.9.6
+prometheus_client==0.25.0
 protobuf==7.34.1
 psycopg2-binary==2.9.12
 pyasn1==0.6.3

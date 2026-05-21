@@ -12,7 +12,7 @@ MOCK_MODE = False
 async def research_agent(ticker: str) -> dict:
     logger.info(f"Research requested for {ticker}")
     try:
-        logger.info(f"Running agents for {ticker}")
+        logger.info(f"Running Research agents for {ticker}")
         if MOCK_MODE:
             await asyncio.sleep(0.4)
             return {
