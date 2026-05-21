@@ -24,7 +24,7 @@ from agents.metrics import active_analyses, cache_hits
 from datetime import datetime, timedelta
 import sys
 #client = Mistral(api_key=os.environ["MISTRAL_API_KEY"])
-
+MOCK_MODE = os.environ.get("MOCK_MODE", "false").lower() == "true"
 
 app = FastAPI(title="MarketPulse Backend")
 
@@ -38,7 +38,7 @@ Instrumentator().instrument(app).expose(app)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000", "https://market-pulse-beryl-eight.vercel.app/"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -96,7 +96,20 @@ async def me(user=Depends(get_current_user)):
 async def synthesizer(ticker: str, news: dict, sentiment: dict, fundamentals: dict, technical: dict, equity: dict, risk: dict) -> dict:
     
     logger.info(f"Synthesizing requested for {ticker}")
-    
+    if MOCK_MODE:
+        return {
+            "recommendation": "buy",
+            "conviction": 7,
+            "price_target": 225.00,
+            "risk_reward": "favorable",
+            "investment_horizon": "long_term",
+            "bull_case": ["Strong earnings growth", "AI integration tailwinds", "Supply chain diversification"],
+            "bear_case": ["Regulatory risks", "Valuation stretched", "Macro headwinds"],
+            "key_catalysts": ["Next earnings release", "New product cycle"],
+            "key_risks": ["Interest rate sensitivity", "Geopolitical tensions"],
+            "position_sizing": "medium",
+            "summary": f"{ticker} presents a compelling long-term investment opportunity with strong fundamentals and positive momentum. The company's diversified revenue streams provide resilience against macro headwinds. Technical indicators support a bullish outlook in the near term. Risk-adjusted returns appear favorable at current levels. We recommend a medium position with a 12-month price target."
+        }
     try:
         logger.info(f"Running agents for {ticker}")
         response = await asyncio.to_thread(

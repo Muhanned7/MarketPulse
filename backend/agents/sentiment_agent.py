@@ -8,8 +8,9 @@ from agents.client import client
 from agents.metrics import agent_calls, agent_latency, mistral_errors
 from loguru import logger
 import time
+import os
 
-MOCK_MODE = False
+MOCK_MODE = os.environ.get("MOCK_MODE", "false").lower() == "true"
 async def sentiment_agent(ticker: str, news_data: dict) -> dict:
     logger.info(f"Sentiment Agent requested for {ticker}")
     agent_calls.labels(agent_name='Sentiment', ticker=ticker).inc()

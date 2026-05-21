@@ -6,9 +6,9 @@ from agents.client import client
 from agents.metrics import agent_calls, agent_latency, mistral_errors
 from loguru import logger
 import time
+import os
 
-
-MOCK_MODE = False
+MOCK_MODE = os.environ.get("MOCK_MODE", "false").lower() == "true"
 async def fundamentals_agent(ticker: str) -> dict:
     logger.info(f"fundamentals agent requested for {ticker}")
     agent_calls.labels(agent_name='fundamentals', ticker=ticker).inc()
