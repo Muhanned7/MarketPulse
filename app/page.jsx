@@ -181,7 +181,7 @@ function Page(){
         handleSearch("market news", false)
         loadWatchlist()
         loadTiles()
-    }, [])
+    }, [handleSearch, loadWatchlist, loadTiles])
     const allTickers = [...new Set([...POPULAR_TICKERS, ...watchlist])];
     
 

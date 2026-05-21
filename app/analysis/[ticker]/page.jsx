@@ -342,10 +342,10 @@ export default function AnalysisPage() {
             router.push('/login')
             return
         }
-        fetchAnalysis()
+        FetchAnalysis()
     }, [user, loading])
 
-    async function fetchAnalysis() {
+    async function FetchAnalysis() {
         // colab : https://charcoal-smashing-headstone.ngrok-free.dev
         setPageLoading(true)
         try {
