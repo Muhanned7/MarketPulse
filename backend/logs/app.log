@@ -1,0 +1,69 @@
+2026-05-21 16:37:28.316 | INFO     | main:analyse:150 - Analysis requested for JPM
+2026-05-21 16:37:28.317 | INFO     | main:analyse:161 - Running agents for JPM
+2026-05-21 16:37:28.317 | INFO     | agents.news_agent:news_agent:66 - News Agent requested for JPM
+2026-05-21 16:37:28.319 | INFO     | agents.news_agent:news_agent:71 - Running News agent for JPM
+2026-05-21 16:37:28.319 | INFO     | agents.news_agent:research_agent:13 - Research requested for JPM
+2026-05-21 16:37:28.319 | INFO     | agents.news_agent:research_agent:15 - Running Research agents for JPM
+2026-05-21 16:37:28.608 | INFO     | main:analyse:150 - Analysis requested for JNJ
+2026-05-21 16:37:28.609 | INFO     | main:analyse:161 - Running agents for JNJ
+2026-05-21 16:37:28.609 | INFO     | agents.news_agent:news_agent:66 - News Agent requested for JNJ
+2026-05-21 16:37:28.610 | INFO     | agents.news_agent:news_agent:71 - Running News agent for JNJ
+2026-05-21 16:37:28.612 | INFO     | agents.news_agent:research_agent:13 - Research requested for JNJ
+2026-05-21 16:37:28.613 | INFO     | agents.news_agent:research_agent:15 - Running Research agents for JNJ
+2026-05-21 16:37:28.631 | INFO     | main:analyse:150 - Analysis requested for BAC
+2026-05-21 16:37:28.632 | INFO     | main:analyse:161 - Running agents for BAC
+2026-05-21 16:37:28.651 | INFO     | agents.news_agent:news_agent:66 - News Agent requested for BAC
+2026-05-21 16:37:28.652 | INFO     | agents.news_agent:news_agent:71 - Running News agent for BAC
+2026-05-21 16:37:28.652 | INFO     | agents.news_agent:research_agent:13 - Research requested for BAC
+2026-05-21 16:37:28.652 | INFO     | agents.news_agent:research_agent:15 - Running Research agents for BAC
+2026-05-21 16:37:35.435 | INFO     | agents.news_agent:news_agent:152 - News Agent complete for BAC
+2026-05-21 16:37:35.436 | INFO     | agents.sentiment_agent:sentiment_agent:14 - Sentiment Agent requested for BAC
+2026-05-21 16:37:35.437 | INFO     | agents.sentiment_agent:sentiment_agent:19 - Running sentiment agent for BAC
+2026-05-21 16:37:35.437 | INFO     | agents.fundamentals_agent:fundamentals_agent:13 - fundamentals agent requested for BAC
+2026-05-21 16:37:35.438 | INFO     | agents.fundamentals_agent:fundamentals_agent:18 - Running fundamentals agents for BAC
+2026-05-21 16:37:35.442 | INFO     | agents.technical_agent:technical_agent:13 - Technical Agent requested for BAC
+2026-05-21 16:37:35.444 | INFO     | agents.equity_reasearch_agent:equity_research_agent:13 - fundamentals agent requested for BAC
+2026-05-21 16:37:35.445 | INFO     | agents.risk_agent:risk_agent:13 - Risk Agent requested for BAC
+2026-05-21 16:37:35.448 | INFO     | agents.risk_agent:risk_agent:18 - Running Risk agent for BAC
+2026-05-21 16:37:38.201 | INFO     | agents.news_agent:news_agent:152 - News Agent complete for JNJ
+2026-05-21 16:37:38.203 | INFO     | agents.sentiment_agent:sentiment_agent:14 - Sentiment Agent requested for JNJ
+2026-05-21 16:37:38.203 | INFO     | agents.sentiment_agent:sentiment_agent:19 - Running sentiment agent for JNJ
+2026-05-21 16:37:38.204 | INFO     | agents.fundamentals_agent:fundamentals_agent:13 - fundamentals agent requested for JNJ
+2026-05-21 16:37:38.207 | INFO     | agents.fundamentals_agent:fundamentals_agent:18 - Running fundamentals agents for JNJ
+2026-05-21 16:37:38.208 | INFO     | agents.technical_agent:technical_agent:13 - Technical Agent requested for JNJ
+2026-05-21 16:37:38.210 | INFO     | agents.equity_reasearch_agent:equity_research_agent:13 - fundamentals agent requested for JNJ
+2026-05-21 16:37:38.212 | INFO     | agents.risk_agent:risk_agent:13 - Risk Agent requested for JNJ
+2026-05-21 16:37:38.214 | INFO     | agents.risk_agent:risk_agent:18 - Running Risk agent for JNJ
+2026-05-21 16:37:38.668 | INFO     | agents.sentiment_agent:sentiment_agent:81 - Sentiment Agent complete for BAC
+2026-05-21 16:37:39.664 | INFO     | agents.equity_reasearch_agent:equity_research_agent:106 - fundamentals Agent complete for BAC
+2026-05-21 16:37:40.707 | INFO     | agents.sentiment_agent:sentiment_agent:81 - Sentiment Agent complete for JNJ
+2026-05-21 16:37:40.921 | INFO     | agents.fundamentals_agent:fundamentals_agent:114 - fundamentals Agent complete for BAC
+2026-05-21 16:37:41.755 | INFO     | agents.news_agent:news_agent:152 - News Agent complete for JPM
+2026-05-21 16:37:41.756 | INFO     | agents.sentiment_agent:sentiment_agent:14 - Sentiment Agent requested for JPM
+2026-05-21 16:37:41.757 | INFO     | agents.sentiment_agent:sentiment_agent:19 - Running sentiment agent for JPM
+2026-05-21 16:37:41.757 | INFO     | agents.fundamentals_agent:fundamentals_agent:13 - fundamentals agent requested for JPM
+2026-05-21 16:37:41.758 | INFO     | agents.fundamentals_agent:fundamentals_agent:18 - Running fundamentals agents for JPM
+2026-05-21 16:37:41.762 | INFO     | agents.technical_agent:technical_agent:13 - Technical Agent requested for JPM
+2026-05-21 16:37:41.763 | INFO     | agents.equity_reasearch_agent:equity_research_agent:13 - fundamentals agent requested for JPM
+2026-05-21 16:37:41.764 | INFO     | agents.risk_agent:risk_agent:13 - Risk Agent requested for JPM
+2026-05-21 16:37:41.765 | INFO     | agents.risk_agent:risk_agent:18 - Running Risk agent for JPM
+2026-05-21 16:37:41.840 | INFO     | agents.technical_agent:technical_agent:124 - Technical Agent complete for JNJ
+2026-05-21 16:37:42.062 | INFO     | agents.technical_agent:technical_agent:124 - Technical Agent complete for BAC
+2026-05-21 16:37:42.197 | INFO     | agents.risk_agent:risk_agent:128 - risk Agent complete for BAC
+2026-05-21 16:37:42.198 | INFO     | main:synthesizer:98 - Synthesizing requested for BAC
+2026-05-21 16:37:42.199 | INFO     | main:synthesizer:101 - Running agents for BAC
+2026-05-21 16:37:42.594 | INFO     | agents.fundamentals_agent:fundamentals_agent:114 - fundamentals Agent complete for JNJ
+2026-05-21 16:37:43.226 | INFO     | agents.risk_agent:risk_agent:128 - risk Agent complete for JNJ
+2026-05-21 16:37:43.249 | INFO     | agents.equity_reasearch_agent:equity_research_agent:106 - fundamentals Agent complete for JNJ
+2026-05-21 16:37:43.250 | INFO     | main:synthesizer:98 - Synthesizing requested for JNJ
+2026-05-21 16:37:43.250 | INFO     | main:synthesizer:101 - Running agents for JNJ
+2026-05-21 16:37:44.009 | INFO     | agents.sentiment_agent:sentiment_agent:81 - Sentiment Agent complete for JPM
+2026-05-21 16:37:44.395 | INFO     | agents.technical_agent:technical_agent:124 - Technical Agent complete for JPM
+2026-05-21 16:37:45.162 | INFO     | agents.risk_agent:risk_agent:128 - risk Agent complete for JPM
+2026-05-21 16:37:45.529 | INFO     | main:synthesizer:137 - Synthesis complete for BAC
+2026-05-21 16:37:45.779 | INFO     | agents.fundamentals_agent:fundamentals_agent:114 - fundamentals Agent complete for JPM
+2026-05-21 16:37:46.159 | INFO     | agents.equity_reasearch_agent:equity_research_agent:106 - fundamentals Agent complete for JPM
+2026-05-21 16:37:46.160 | INFO     | main:synthesizer:98 - Synthesizing requested for JPM
+2026-05-21 16:37:46.160 | INFO     | main:synthesizer:101 - Running agents for JPM
+2026-05-21 16:37:46.585 | INFO     | main:synthesizer:137 - Synthesis complete for JNJ
+2026-05-21 16:37:49.983 | INFO     | main:synthesizer:137 - Synthesis complete for JPM

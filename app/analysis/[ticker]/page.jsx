@@ -349,7 +349,7 @@ export default function AnalysisPage() {
         // colab : https://charcoal-smashing-headstone.ngrok-free.dev
         setPageLoading(true)
         try {
-            const res = await fetch(`https://localhost:8000/analyse/${ticker}`, { method: 'POST' })
+            const res = await fetch(`https://finnwinn.onrender.com/analyse/${ticker}`, { method: 'POST' })
             const data = await res.json()
             setReport(data.report)
             setAgents(data.agents)

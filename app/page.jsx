@@ -160,7 +160,7 @@ function page(){
             // colab compute https://charcoal-smashing-headstone.ngrok-free.dev
             const results = await Promise.all(
                 tickers.map(ticker =>
-                    fetch(`http://localhost:8000/analyse/${ticker}`,
+                    fetch(`https://finnwinn.onrender.com/analyse/${ticker}`,
                          {method: 'POST'}
                     )
                         .then(r => r.json())
