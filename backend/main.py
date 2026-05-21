@@ -199,7 +199,7 @@ async def analyse(ticker: str):
         return result
     except Exception as e:
         logger.error(f"Analysis failed for {ticker}: {e}")
-        raise
+        raise HTTPException(status_code=500, detail=str(e)) 
     finally:
         active_analyses.dec()
 

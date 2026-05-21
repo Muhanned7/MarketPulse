@@ -145,27 +145,20 @@ function Page(){
     }
     
 
-    async function loadTiles() {
+    async function loadTiles(tickers) {
         setTilesLoading(true)
         try {
-            // fetch watchlist
-            const token = localStorage.getItem('token')
-            const res = await fetch('/api/watchlist', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            })
-            const data = await res.json()
-            const tickers = data.tickers.map(t => t.ticker)
-
-            // fetch analysis for each ticker in parallel
-            // colab compute https://charcoal-smashing-headstone.ngrok-free.dev
             const results = await Promise.all(
                 tickers.map(ticker =>
-                    fetch(`https://finnwinn.onrender.com/analyse/${ticker}`,
-                         {method: 'POST'}
-                    )
-                        .then(r => r.json())
-                        .then(data => ({ ticker, ...data.report, status: 'done' }))
-                        .catch(() => ({ ticker, status: 'error' }))
+                    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/analyse/${ticker}`, { method: 'POST' })
+                        .then(async r => {
+                            const data = await r.json()
+                            if (!r.ok) {
+                                return { ticker, status: 'error', message: data.detail }  // ← capture error message
+                            }
+                            return { ticker, ...data.report, status: 'done' }
+                        })
+                        .catch(err => ({ ticker, status: 'error', message: err.message }))
                 )
             )
             setTiles(results)
@@ -241,17 +234,19 @@ function Page(){
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
             {tiles.map(tile => (
+                
                 <div
                     key={tile.ticker}
                     className="min-w-[25%] max-w-[25%] md:min-w-[25%] lg:min-w-[25%] snap-center bg-white rounded-xl p-5 border border-gray-200 hover:border-teal-400 transition-all flex-shrink-0"
                     
                 >
-                    {tile.status === 'error' ? (
+                
+                {tile.status === 'error' && (
                         <div>
                             <h2 className="text-xl font-bold text-gray-900">{tile.ticker}</h2>
-                            <p className="text-red-400 text-sm mt-2">Failed to load analysis</p>
+                            <p className="text-red-400 text-sm mt-2">⚠ {tile.message || 'Failed to load analysis'}</p>
                         </div>
-                    ) : (
+                    )}: (
                         <>
                             <div className="flex justify-between items-start mb-3">
                                 <h2 className="text-xl font-bold text-gray-900">{tile.ticker}</h2>
