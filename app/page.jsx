@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 
 
 
-function page(){
+function Page(){
     const [input, setInput] = useState("")    // what user typed
     const [Searchloading, setSearchLoading] = useState(false) // show spinner
     const [error, setError] = useState(null)     // show error message
@@ -421,4 +421,4 @@ function page(){
 }
 
 
-export default page
+export default Page
